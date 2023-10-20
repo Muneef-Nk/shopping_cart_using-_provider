@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_card_using_provider/view/screens/detailscreen/detailscreen.dart';
 
+import '../../../model/product_model.dart';
 import '../../../utils/color_constants.dart';
 // import 'package:provider/provider.dart';
 
@@ -116,62 +118,75 @@ class HomeScreen extends StatelessWidget {
           GridView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: 20,
+              itemCount: product.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2, childAspectRatio: .7),
               itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(children: [
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        height: 200,
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 228, 224, 224),
-                            borderRadius: BorderRadius.circular(15)),
-                      ),
-                      Positioned(
-                        right: 20,
-                        top: 10,
-                        child: Container(
-                          height: 40,
-                          width: 40,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => DetailsScreen()));
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Stack(children: [
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          height: 200,
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Icon(
-                            Icons.favorite_outline,
-                            size: 30,
+                              color: Color.fromARGB(255, 228, 224, 224),
+                              borderRadius: BorderRadius.circular(15)),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              product[index].image,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
+                        Positioned(
+                          right: 20,
+                          top: 10,
+                          child: Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Icon(
+                              Icons.favorite_outline,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                      ]),
+                      SizedBox(
+                        height: 10,
                       ),
-                    ]),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 15,
-                        bottom: 5,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 15,
+                          bottom: 5,
+                        ),
+                        child: Text(
+                          product[index].name,
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      child: Text(
-                        "regular fit slogan",
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.bold),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Text(
+                          product[index].price,
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Text(
-                        "RS 2,000",
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               })
         ]),
