@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopping_card_using_provider/controller/details_screen_controller.dart';
+import 'package:shopping_card_using_provider/view/add_to_card/add_to_card.dart';
 import 'package:shopping_card_using_provider/view/screens/detailscreen/detailscreen.dart';
 
 import '../../../model/product_model.dart';
@@ -18,35 +21,44 @@ class HomeScreen extends StatelessWidget {
               color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
         ),
         actions: [
-          Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.shopping_bag_outlined,
-                  size: 30,
-                  color: Colors.black,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => AddtoCard()));
+            },
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.shopping_bag_outlined,
+                    size: 30,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              Positioned(
-                top: 6,
-                right: 6,
-                child: Container(
-                  width: 16,
-                  height: 16,
-                  decoration:
-                      BoxDecoration(shape: BoxShape.circle, color: Colors.pink),
-                  child: Center(
-                      child: Text(
-                    "9",
-                    style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  )),
-                ),
-              )
-            ],
+                Positioned(
+                  top: 6,
+                  right: 6,
+                  child: Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.pink),
+                    child: Center(
+                        child: Text(
+                      Provider.of<DetailsScreenController>(context)
+                          .card
+                          .length
+                          .toString(),
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    )),
+                  ),
+                )
+              ],
+            ),
           )
         ],
       ),
@@ -125,7 +137,13 @@ class HomeScreen extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => DetailsScreen()));
+                        builder: (context) => DetailsScreen(
+                              index: index,
+                            )));
+
+                    Provider.of<DetailsScreenController>(context,
+                        listen: false);
+                    // .checkTotal();
                   },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,9 +194,9 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 15),
+                        padding: EdgeInsets.only(left: 15),
                         child: Text(
-                          product[index].price,
+                          "${product[index].price}",
                           style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey,
