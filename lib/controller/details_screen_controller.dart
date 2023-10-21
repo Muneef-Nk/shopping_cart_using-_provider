@@ -7,6 +7,8 @@ class DetailsScreenController with ChangeNotifier {
   int? total;
   int itemCount = 1;
 
+  List<CardModel> card = [];
+
   void add() {
     if (itemCount < 10) {
       itemCount++;
@@ -14,15 +16,15 @@ class DetailsScreenController with ChangeNotifier {
     notifyListeners();
   }
 
-  void reset() {
-    itemCount = 1;
-    notifyListeners();
-  }
-
   void remove() {
     if (itemCount > 1) {
       itemCount--;
     }
+    notifyListeners();
+  }
+
+  void reset() {
+    itemCount = 1;
     notifyListeners();
   }
 
@@ -35,18 +37,16 @@ class DetailsScreenController with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeCard(int index) {
-    card.removeAt(index);
-    notifyListeners();
-  }
-
-  List<CardModel> card = [];
-
   addTotal(int index) {
     if (card[index].itemCount < 10) {
       card[index].itemCount++;
       card[index].total = card[index].total + card[index].price;
     }
+    notifyListeners();
+  }
+
+  void removeCard(int index) {
+    card.removeAt(index);
     notifyListeners();
   }
 

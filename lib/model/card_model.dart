@@ -1,4 +1,5 @@
 class CardModel {
+  final int id;
   final String title;
   final String image;
   final int price;
@@ -14,5 +15,6 @@ class CardModel {
       required this.image,
       required this.price,
       required this.itemCount,
+      required this.id,
       required this.total});
 }

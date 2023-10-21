@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_card_using_provider/controller/details_screen_controller.dart';
 
+// import 'controller/card_screen_controller.dart';
 import 'view/screens/homescreen/homescreen.dart';
 
 void main() {
@@ -13,8 +14,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => DetailsScreenController(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => DetailsScreenController()),
+        // ChangeNotifierProvider(create: (context) => CardScreenController())
+        ChangeNotifierProxyProvider(
+            create: (context) => CardScreenController(), update: update)
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: HomeScreen(),

@@ -36,38 +36,44 @@ class DetailsScreen extends StatelessWidget {
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         actions: [
-          Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.shopping_bag_outlined,
-                  size: 30,
-                  color: Colors.black,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => AddtoCard()));
+            },
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.shopping_bag_outlined,
+                    size: 30,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              Positioned(
-                top: 6,
-                right: 6,
-                child: Container(
-                  width: 16,
-                  height: 16,
-                  decoration:
-                      BoxDecoration(shape: BoxShape.circle, color: Colors.pink),
-                  child: Center(
-                      child: Text(
-                    Provider.of<DetailsScreenController>(context)
-                        .card
-                        .length
-                        .toString(),
-                    style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  )),
-                ),
-              )
-            ],
+                Positioned(
+                  top: 6,
+                  right: 6,
+                  child: Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.pink),
+                    child: Center(
+                        child: Text(
+                      Provider.of<DetailsScreenController>(context)
+                          .card
+                          .length
+                          .toString(),
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    )),
+                  ),
+                )
+              ],
+            ),
           )
         ],
       ),
@@ -273,27 +279,37 @@ class DetailsScreen extends StatelessWidget {
                 // Navigator.of(context)
                 //     .push(MaterialPageRoute(builder: (context) => AddtoCard()));
 
-                Provider.of<DetailsScreenController>(context, listen: false)
-                    .addCard(
-                  CardModel(
-                      title: product[index].name,
-                      image: product[index].image,
-                      price: product[index].price,
-                      total: Provider.of<DetailsScreenController>(context,
-                              listen: false)
-                          .totalPrice(index),
-                      description: description,
-                      size: "M",
-                      itemCount: quantity),
-                );
-
                 print(quantity);
 
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    backgroundColor: Colors.green,
-                    content: Text("this item added your card")));
+                if (Provider.of<DetailsScreenController>(context, listen: false)
+                    .card
+                    .any((element) => element.id == index)) {
+                  print("card nd");
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: Colors.orange,
+                      content: Text("this item already added your card")));
+                } else {
+                  print('card illa');
 
-                // if(product[index].any)
+                  Provider.of<DetailsScreenController>(context, listen: false)
+                      .addCard(
+                    CardModel(
+                        title: product[index].name,
+                        image: product[index].image,
+                        price: product[index].price,
+                        total: Provider.of<DetailsScreenController>(context,
+                                listen: false)
+                            .totalPrice(index),
+                        description: description,
+                        size: "M",
+                        itemCount: quantity,
+                        id: index),
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: Colors.green,
+                      content: Text("this item added your card")));
+                }
               },
               child: Container(
                 width: 150,

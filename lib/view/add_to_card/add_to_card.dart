@@ -10,6 +10,25 @@ class AddtoCard extends StatelessWidget {
     var provider = Provider.of<DetailsScreenController>(context);
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+          ),
+          centerTitle: true,
+          title: Text("Card",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold)),
+        ),
         body: provider.card.isEmpty
             ? Center(child: Text("Card is empty"))
             : ListView.builder(
@@ -42,6 +61,10 @@ class AddtoCard extends StatelessWidget {
                       Provider.of<DetailsScreenController>(context,
                               listen: false)
                           .removeCard(index);
+
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          backgroundColor: Colors.red,
+                          content: Text("This item remove your card")));
                     },
                     child: Container(
                       margin: EdgeInsets.only(top: 20, left: 15, right: 15),
