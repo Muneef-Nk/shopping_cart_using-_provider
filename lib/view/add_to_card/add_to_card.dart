@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopping_card_using_provider/controller/details_screen_controller.dart';
+
+import '../../controller/product_card_controller.dart';
 
 class AddtoCard extends StatelessWidget {
-  const AddtoCard({super.key});
+  AddtoCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<DetailsScreenController>(context);
+    var provider = Provider.of<ProductCardController>(context);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -23,17 +25,23 @@ class AddtoCard extends StatelessWidget {
             ),
           ),
           centerTitle: true,
-          title: Text("Card",
+          title: Text("Cart",
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
                   fontWeight: FontWeight.bold)),
         ),
         body: provider.card.isEmpty
-            ? Center(child: Text("Card is empty"))
+            ? Center(
+                child: Text(
+                "Your Cart is empty",
+                style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.orange,
+                    fontWeight: FontWeight.bold),
+              ))
             : ListView.builder(
-                itemCount:
-                    Provider.of<DetailsScreenController>(context).card.length,
+                itemCount: provider.card.length,
                 itemBuilder: (context, index) {
                   return Dismissible(
                     background: Container(
@@ -53,13 +61,10 @@ class AddtoCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    key: Key('${Provider.of<DetailsScreenController>(
-                      context,
-                    ).card}'),
+                    key: Key('${provider.card}'),
                     direction: DismissDirection.endToStart,
                     onDismissed: (direction) {
-                      Provider.of<DetailsScreenController>(context,
-                              listen: false)
+                      Provider.of<ProductCardController>(context, listen: false)
                           .removeCard(index);
 
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -85,9 +90,7 @@ class AddtoCard extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: Image.network(
-                                Provider.of<DetailsScreenController>(context)
-                                    .card[index]
-                                    .image,
+                                provider.card[index].image,
                                 // product[index].image,
                                 fit: BoxFit.cover,
                               ),
@@ -109,14 +112,14 @@ class AddtoCard extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${Provider.of<DetailsScreenController>(context).card[index].title}',
+                                    '${provider.card[index].title}',
                                     style: TextStyle(
                                         fontSize: 20,
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    '${Provider.of<DetailsScreenController>(context).card[index].description} ?? "nn',
+                                    '${provider.card[index].description} ?? "nn',
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.grey[900],
@@ -124,19 +127,17 @@ class AddtoCard extends StatelessWidget {
                                     maxLines: 2,
                                   ),
                                   Text(
-                                    'Price : ${Provider.of<DetailsScreenController>(context).card[index].price}',
+                                    'Price : ${provider.card[index].price}',
                                     style: TextStyle(
                                         fontSize: 15,
-                                        color: const Color.fromARGB(
-                                            255, 33, 33, 33),
+                                        color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    'Size : ${Provider.of<DetailsScreenController>(context).card[index].size}',
+                                    'Size : ${provider.card[index].size}',
                                     style: TextStyle(
                                         fontSize: 15,
-                                        color: const Color.fromARGB(
-                                            255, 33, 33, 33),
+                                        color: Colors.black,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Row(
@@ -152,7 +153,7 @@ class AddtoCard extends StatelessWidget {
                                                 BorderRadius.circular(8)),
                                         child: Center(
                                           child: Text(
-                                            '${Provider.of<DetailsScreenController>(context).card[index].total}',
+                                            '${provider.card[index].total}',
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 color: Colors.white,
@@ -165,10 +166,12 @@ class AddtoCard extends StatelessWidget {
                                       ),
                                       GestureDetector(
                                           onTap: () {
-                                            Provider.of<DetailsScreenController>(
+                                            Provider.of<ProductCardController>(
                                                     context,
                                                     listen: false)
                                                 .removeTotal(index);
+
+                                            print('remove total');
                                           },
                                           child: Container(
                                             width: 30,
@@ -186,13 +189,9 @@ class AddtoCard extends StatelessWidget {
                                         width: 5,
                                       ),
                                       Text(
-                                        Provider.of<DetailsScreenController>(
-                                                        context)
-                                                    .card[index]
-                                                    .itemCount <
-                                                10
-                                            ? '0${Provider.of<DetailsScreenController>(context).card[index].itemCount}'
-                                            : '${Provider.of<DetailsScreenController>(context).card[index].itemCount}',
+                                        provider.card[index].itemCount < 10
+                                            ? '0${provider.card[index].itemCount}'
+                                            : '${provider.card[index].itemCount}',
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold),
@@ -202,7 +201,7 @@ class AddtoCard extends StatelessWidget {
                                       ),
                                       GestureDetector(
                                           onTap: () {
-                                            Provider.of<DetailsScreenController>(
+                                            Provider.of<ProductCardController>(
                                                     context,
                                                     listen: false)
                                                 .addTotal(index);

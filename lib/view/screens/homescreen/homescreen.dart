@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopping_card_using_provider/controller/details_screen_controller.dart';
+import 'package:shopping_card_using_provider/controller/home_controller.dart';
+import 'package:shopping_card_using_provider/controller/product_card_controller.dart';
+import 'package:shopping_card_using_provider/controller/saved_product_controller.dart';
 import 'package:shopping_card_using_provider/view/add_to_card/add_to_card.dart';
 import 'package:shopping_card_using_provider/view/screens/detailscreen/detailscreen.dart';
 
 import '../../../model/product_model.dart';
-import '../../../utils/color_constants.dart';
 // import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<ProductCardController>(context);
+    var providerSaved = Provider.of<SavedProductController>(context);
+    var homeConroller = Provider.of<HomeScreenController>(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -46,10 +51,7 @@ class HomeScreen extends StatelessWidget {
                         shape: BoxShape.circle, color: Colors.pink),
                     child: Center(
                         child: Text(
-                      Provider.of<DetailsScreenController>(context)
-                          .card
-                          .length
-                          .toString(),
+                      provider.card.length.toString(),
                       style: TextStyle(
                           fontSize: 10,
                           color: Colors.white,
@@ -107,20 +109,30 @@ class HomeScreen extends StatelessWidget {
             padding: EdgeInsets.only(left: 15),
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: label.length,
+                itemCount: homeConroller.label.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(right: 15),
-                    width: 80,
-                    decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Center(
-                        child: Text(
-                      label[index],
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    )),
+                  return GestureDetector(
+                    onTap: () {
+                      homeConroller.changeCategory(index);
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 15),
+                      width: 80,
+                      decoration: BoxDecoration(
+                          color: homeConroller.currentCategoryIndex == index
+                              ? Colors.black
+                              : Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                          child: Text(
+                        homeConroller.label[index],
+                        style: TextStyle(
+                            color: homeConroller.currentCategoryIndex == index
+                                ? Colors.white
+                                : Colors.black,
+                            fontWeight: FontWeight.bold),
+                      )),
+                    ),
                   );
                 }),
           ),
@@ -141,8 +153,7 @@ class HomeScreen extends StatelessWidget {
                               index: index,
                             )));
 
-                    Provider.of<DetailsScreenController>(context,
-                        listen: false);
+                    Provider.of<ProductCardController>(context, listen: false);
                     // .checkTotal();
                   },
                   child: Column(
@@ -166,16 +177,24 @@ class HomeScreen extends StatelessWidget {
                         Positioned(
                           right: 20,
                           top: 10,
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Icon(
-                              Icons.favorite_outline,
-                              size: 30,
-                            ),
+                          child: GestureDetector(
+                            onTap: () {
+                              //
+                              providerSaved.addSaved(index);
+                            },
+                            child: Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: providerSaved.isExist(index)
+                                    ? Icon(
+                                        Icons.favorite,
+                                        size: 30,
+                                        color: Colors.red,
+                                      )
+                                    : Icon(Icons.favorite_outline, size: 30)),
                           ),
                         ),
                       ]),

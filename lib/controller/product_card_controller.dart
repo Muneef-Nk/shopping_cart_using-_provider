@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:shopping_card_using_provider/model/card_model.dart';
 import 'package:shopping_card_using_provider/model/product_model.dart';
 
-class DetailsScreenController with ChangeNotifier {
+class ProductCardController with ChangeNotifier {
   late int price;
   int? total;
   int itemCount = 1;
-
   List<CardModel> card = [];
 
   void add() {

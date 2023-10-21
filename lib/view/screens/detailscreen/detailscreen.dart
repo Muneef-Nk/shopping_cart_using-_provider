@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopping_card_using_provider/controller/details_screen_controller.dart';
+import 'package:shopping_card_using_provider/controller/product_card_controller.dart';
+import 'package:shopping_card_using_provider/controller/saved_product_controller.dart';
 import 'package:shopping_card_using_provider/model/card_model.dart';
 import 'package:shopping_card_using_provider/view/add_to_card/add_to_card.dart';
 
@@ -9,10 +10,14 @@ import 'widgets/size_container.dart';
 
 class DetailsScreen extends StatelessWidget {
   final int index;
+
   DetailsScreen({super.key, required this.index});
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<ProductCardController>(context);
+    var savedProvider = Provider.of<SavedProductController>(context);
+
     String description =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam mollis posuere magna ut vestibulum. Proin eleifend velit massa, a laoreet lectus pulvinar non. Pellentesque sem est, blandit id nibh vel, pellentesque sagittis lorem. Nam id pharetra est. Vestibulum velit justo, vehicula et urna eu, efficitur congue nisl";
     return Scaffold(
@@ -23,8 +28,7 @@ class DetailsScreen extends StatelessWidget {
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context);
-            Provider.of<DetailsScreenController>(context, listen: false)
-                .reset();
+            Provider.of<ProductCardController>(context, listen: false).reset();
           },
           child: Icon(
             Icons.arrow_back,
@@ -61,10 +65,7 @@ class DetailsScreen extends StatelessWidget {
                         shape: BoxShape.circle, color: Colors.pink),
                     child: Center(
                         child: Text(
-                      Provider.of<DetailsScreenController>(context)
-                          .card
-                          .length
-                          .toString(),
+                      provider.card.length.toString(),
                       style: TextStyle(
                           fontSize: 10,
                           color: Colors.white,
@@ -98,10 +99,16 @@ class DetailsScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(5)),
-                  child: Icon(
-                    Icons.favorite_outline,
-                    size: 30,
-                  ),
+                  child: savedProvider.isExist(index)
+                      ? Icon(
+                          Icons.favorite,
+                          size: 30,
+                          color: Colors.red,
+                        )
+                      : Icon(
+                          Icons.favorite_border,
+                          size: 30,
+                        ),
                 ),
               ),
             ],
@@ -208,7 +215,7 @@ class DetailsScreen extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Provider.of<DetailsScreenController>(context,
+                            Provider.of<ProductCardController>(context,
                                     listen: false)
                                 .remove();
                             print('you clicked fun');
@@ -220,7 +227,7 @@ class DetailsScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          Provider.of<DetailsScreenController>(context)
+                          Provider.of<ProductCardController>(context)
                               .itemCount
                               .toString(),
                           style: TextStyle(
@@ -231,7 +238,7 @@ class DetailsScreen extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Provider.of<DetailsScreenController>(context,
+                            Provider.of<ProductCardController>(context,
                                     listen: false)
                                 .add();
                           },
@@ -264,7 +271,7 @@ class DetailsScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10),
               child: Text(
-                "Total: ₹ ${Provider.of<DetailsScreenController>(context, listen: false).totalPrice(index)}",
+                "Total: ₹ ${Provider.of<ProductCardController>(context, listen: false).totalPrice(index)}",
                 style: TextStyle(
                     fontSize: 20,
                     color: const Color.fromARGB(255, 255, 255, 255),
@@ -274,16 +281,14 @@ class DetailsScreen extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 int quantity =
-                    Provider.of<DetailsScreenController>(context, listen: false)
+                    Provider.of<ProductCardController>(context, listen: false)
                         .itemCount;
                 // Navigator.of(context)
                 //     .push(MaterialPageRoute(builder: (context) => AddtoCard()));
 
                 print(quantity);
 
-                if (Provider.of<DetailsScreenController>(context, listen: false)
-                    .card
-                    .any((element) => element.id == index)) {
+                if (provider.card.any((element) => element.id == index)) {
                   print("card nd");
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       backgroundColor: Colors.orange,
@@ -291,13 +296,13 @@ class DetailsScreen extends StatelessWidget {
                 } else {
                   print('card illa');
 
-                  Provider.of<DetailsScreenController>(context, listen: false)
+                  Provider.of<ProductCardController>(context, listen: false)
                       .addCard(
                     CardModel(
                         title: product[index].name,
                         image: product[index].image,
                         price: product[index].price,
-                        total: Provider.of<DetailsScreenController>(context,
+                        total: Provider.of<ProductCardController>(context,
                                 listen: false)
                             .totalPrice(index),
                         description: description,
