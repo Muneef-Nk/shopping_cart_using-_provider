@@ -93,22 +93,27 @@ class DetailsScreen extends StatelessWidget {
               Positioned(
                 right: 20,
                 top: 10,
-                child: Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5)),
-                  child: savedProvider.isExist(index)
-                      ? Icon(
-                          Icons.favorite,
-                          size: 30,
-                          color: Colors.red,
-                        )
-                      : Icon(
-                          Icons.favorite_border,
-                          size: 30,
-                        ),
+                child: GestureDetector(
+                  onTap: () {
+                    savedProvider.addSaved(index);
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: savedProvider.isExist(index)
+                        ? Icon(
+                            Icons.favorite,
+                            size: 30,
+                            color: Colors.red,
+                          )
+                        : Icon(
+                            Icons.favorite_border,
+                            size: 30,
+                          ),
+                  ),
                 ),
               ),
             ],
